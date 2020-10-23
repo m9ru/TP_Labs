@@ -1,36 +1,57 @@
+import java.util.ArrayList;
 public class f4 {
-    public static Boolean validColor(String str) {
-        if ((str.substring(0, 4).equals("rgb(") || str.substring(0, 5).equals("rgba(")) &&
-            str.charAt(str.length()-1) == ')' ) {
-                int i = str.indexOf("(") + 1;
-                String buf = "";
-                int commas = 0;
-                while (str.charAt(i) != ')' && commas < 4) {
-                    if (str.charAt(i) >= 48 && str.charAt(i) <= 57 || commas == 3 && str.charAt(i) == '.')
-                        buf += str.charAt(i);
-                    else if (str.charAt(i) == ',') {
-                        if (buf == "" || Integer.parseInt(buf) > 255)
-                            return false;
-                        buf = "";
-                        commas++;
+    public static String stripUrlParams (String str, String... args) {
+        int i = str.indexOf("?");
+        String bufPar = "", bufNum = "", res;
+        if (i == -1)
+            return str;
+        i++;
+        res = str.substring(0, i);
+        Boolean boolPar = true, inArgs;
+        ArrayList<String> params = new ArrayList<>(args.length);
+        ArrayList<Integer> values = new ArrayList<>(args.length);
+        while (i<str.length()) {
+            if (str.charAt(i) == '&' && bufNum.length() > 0 && !boolPar) {
+                if (params.indexOf(bufPar) != -1)
+                    values.set((params.indexOf(bufPar)), Integer.parseInt(bufNum));
+                boolPar = true;
+                bufPar = "";
+                bufNum = "";
+            }
+            else
+                if (!boolPar)
+                    bufNum += str.charAt(i);
+            if (str.charAt(i) == '=' && bufPar.length() > 0 && boolPar) {
+                if (params.indexOf(bufPar) == -1) {
+                    inArgs = false;
+                    for (String j:args)
+                        if (j.equals(bufPar))
+                            inArgs = true;
+                    if (!inArgs) {
+                        params.add(bufPar);
+                        values.add(null);
                     }
-                    else
-                        return false;
-                    i++;
                 }
-                if (buf == "" || commas == 3 && Double.parseDouble(buf) > 1)
-                    return false;
-                if (str.substring(0, 4).equals("rgb(") && commas == 2 || str.substring(0, 5).equals("rgba(") && commas == 3)
-                    return true;
-                else
-                    return false;
+                boolPar = false;
+            }
+            else
+                if (boolPar && str.charAt(i) != '&')
+                    bufPar += str.charAt(i);
+            i++;
         }
-        else
-            return false;
-
+        if (!boolPar && bufNum.length() > 0) // for last
+            if (params.indexOf(bufPar) != -1)
+                values.set((params.indexOf(bufPar)), Integer.parseInt(bufNum));
+        for (i=0; i<params.size(); i++) {
+            res += params.get(i) + "=" + values.get(i);
+            if (i<params.size() - 1)
+                res += "&";
+        }
+        return res;
 
     }
     public static void main(String[] args) {
-        System.out.println(validColor("rgb(7,54,8)"));
+        String[] extraOpt = {"b"};
+        System.out.println(stripUrlParams("https://edabit.com?a=3&c=4&a=5&a=4&b=8&c=5", extraOpt));
     }
 }
