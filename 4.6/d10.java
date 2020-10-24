@@ -15,12 +15,8 @@ public class d10 {
                 test = seq.substring(beg+1, end);
                 temp = "";
                 for (j = 0; j < test.length(); j++){
-                    char current = test.charAt(j);
-                    if (temp.indexOf(current) < 0){
-                        temp = temp + current;
-                    } else {
-                        //temp = temp.replace(String.valueOf(current), "");
-                    }
+                    if (temp.indexOf(test.charAt(j)) < 0){
+                        temp = temp + test.charAt(j);
                 }
                 count += temp.length();
                 beg = -1;
