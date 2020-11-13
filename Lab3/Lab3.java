@@ -6,7 +6,7 @@ public class Lab3 {
     public static void main(String[] args){
         UrlCont urlCont = new UrlCont("http://mtuci.ru/");
         int depth = 1;
-        int threadNum = 1;
+        int threadNum = 2;
         
         ArrayList<UrlScan> scanners = new ArrayList<>(threadNum);
         for (int i = 0; i < threadNum; i++)

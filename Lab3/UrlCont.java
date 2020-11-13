@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class UrlCont 
+public class UrlCont
 {
 	private Hashtable<String, UrlInfo> unprocUrl = new Hashtable<>();
 	private Hashtable<String, UrlInfo> visitUrl = new Hashtable<>();
